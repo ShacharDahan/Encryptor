@@ -1,46 +1,97 @@
-using System.IO;
-
 namespace Encryptor
 {
 
-  public sealed class IOManager
+  public static class IOManager
   {
-    private IOManager() { }
-
-    private static IOManager _instance;
-
-    public static IOManager GetInstance()
+    public static void WriteLine(string output)
     {
-      _instance ??= new IOManager();
-
-      return _instance;
+      try
+      {
+        Console.WriteLine(output);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine("If it didn't work once i guess we'll try again?");
+        Environment.Exit(1);
+      }
     }
 
-    public void WriteLine(string output)
+    public static UserOptions GetUserSelection()
     {
-      Console.WriteLine(output);
+      WriteLine("Enter desired action:");
+      foreach (var value in Enum.GetValues(typeof(UserOptions)))
+      {
+        int numValue = (int)value;
+        WriteLine($"{value} = {numValue}");
+      }
+
+      var input = ReadLine();
+
+      try
+      {
+        if (!int.TryParse(input, out var numInput) || !Enum.IsDefined(typeof(UserOptions), numInput))
+        {
+          throw new Exception("Input isn't a valid option!");
+        }
+
+        UserOptions userChoice = (UserOptions)numInput;
+
+        return userChoice;
+      }
+      catch (Exception e)
+      {
+        WriteLine(e.Message);
+        Environment.Exit(1);
+        return default;
+      }
     }
 
-    public string ReadLine()
+    public static string ReadLine()
     {
       var input = Console.ReadLine();
 
-      return input ?? throw new Exception("Empty input received");
+      try
+      {
+        return input ?? throw new Exception("Input Error");
+      }
+      catch (Exception e)
+      {
+        WriteLine(e.Message);
+        Environment.Exit(1);
+        return default;
+      }
     }
 
-    public string ReadFile(string filepath)
+    public static string ReadFile(string filepath)
     {
-      var file = File.ReadAllText(filepath).Trim();
+      try
+      {
+        var file = File.ReadAllText(filepath).Trim();
 
-      return file;
+        return file;
+      }
+      catch (Exception e)
+      {
+        WriteLine($"Error reading file: {e.Message}");
+        Environment.Exit(1);
+        return default;
+      }
     }
 
-    public void WriteFile(string filepath, string data)
+    public static void WriteFile(string filepath, string data)
     {
-      using var file = File.Open(filepath, FileMode.Create);
-      using StreamWriter streamWriter = new(file);
+      try
+      {
+        using var file = File.Open(filepath, FileMode.Create);
+        using StreamWriter streamWriter = new(file);
 
-      streamWriter.Write(data);
+        streamWriter.Write(data);
+      }
+      catch (Exception e)
+      {
+        WriteLine($"Error writing file: {e.Message}");
+        Environment.Exit(1);
+      }
     }
   }
 }

@@ -1,35 +1,38 @@
 namespace Encryptor
 {
-  sealed class Decryptor
+  public class Decryptor
   {
-    private Decryptor() { }
-
-    private static Decryptor _instance;
-
-    public static Decryptor GetInstance()
-    {
-      _instance ??= new Decryptor();
-
-      return _instance;
-    }
+    public Decryptor() { }
 
     public string Decrypt(string filepath, string keypath)
     {
-      var iom = IOManager.GetInstance();
 
-      var encryptedData = iom.ReadFile(filepath);
-      var key = int.Parse(iom.ReadFile(keypath));
+      var encryptedData = IOManager.ReadFile(filepath);
 
-      var decryptedData = new string([.. encryptedData.Select(c => (char)(c - key))]);
+      try
+      {
+        if (!int.TryParse(IOManager.ReadFile(keypath), out int key))
+        {
+          throw new Exception("Key is invalid!");
+        }
 
-      var decryptedFilepath = Path.Combine(
-        Path.GetDirectoryName(filepath),
-        Path.GetFileName(filepath).Replace("encrypted", "decrypted")
-      );
+        var decryptedData = new string([.. encryptedData.Select(c => (char)(c - key))]);
 
-      iom.WriteFile(decryptedFilepath, decryptedData);
+        var decryptedFilepath = Path.Combine(
+          Path.GetDirectoryName(filepath),
+          Path.GetFileName(filepath).Replace("encrypted", "decrypted")
+        );
 
-      return decryptedFilepath;
+        IOManager.WriteFile(decryptedFilepath, decryptedData);
+
+        return decryptedFilepath;
+      }
+      catch (Exception e)
+      {
+        IOManager.WriteLine(e.Message);
+        Environment.Exit(1);
+        return default;
+      }
     }
   }
 }

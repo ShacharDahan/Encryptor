@@ -4,14 +4,11 @@
     {
         static void Main(string[] args)
         {
-            IOManager ioManager = IOManager.GetInstance();
+            var userChoice = IOManager.GetUserSelection();
 
-            ioManager.WriteLine("Choose encrypt or decrypt");
-            var input = ioManager.ReadLine();
-
-            switch (input)
+            switch (userChoice)
             {
-                case "encrypt":
+                case UserOptions.Encrypt:
                     Console.Write("Enter file to encrypt path: ");
                     var filePath = Console.ReadLine();
 
@@ -19,45 +16,51 @@
 
                     if (isFileExist)
                     {
-                        Encryptor encryptor = Encryptor.GetInstance();
+                        Encryptor encryptor = new();
 
                         var paths = encryptor.Encrypt(filePath);
 
-                        ioManager.WriteLine($"Encrypted file!");
-                        ioManager.WriteLine($"path for the new file is: {paths[0]}");
-                        ioManager.WriteLine($"path for the key file is: {paths[1]}");
+                        IOManager.WriteLine($"Encrypted file!");
+                        IOManager.WriteLine($"path for the new file is: {paths[0]}");
+                        IOManager.WriteLine($"path for the key file is: {paths[1]}");
                     }
                     else
                     {
-                        ioManager.WriteLine("Can't find file");
+                        IOManager.WriteLine("Can't find file");
                     }
                     break;
-                case "decrypt":
+                case UserOptions.Decrypt:
                     Console.Write("Enter file to decrypt path: ");
                     var encryptedFilePath = Console.ReadLine();
                     Console.Write("Enter file of encryption key path: ");
                     var keyFilePath = Console.ReadLine();
 
-                    var isFileAndKeyExist = File.Exists(encryptedFilePath) && File.Exists(keyFilePath);
+                    var isEncryptedFileExist = File.Exists(encryptedFilePath);
+                    var isKeyExist = File.Exists(keyFilePath);
 
-                    if (isFileAndKeyExist)
+                    if (isEncryptedFileExist && isKeyExist)
                     {
-                        Decryptor decryptor = Decryptor.GetInstance();
+                        Decryptor decryptor = new();
                         var decryptedFilePath = decryptor.Decrypt(encryptedFilePath, keyFilePath);
 
-                        ioManager.WriteLine($"Decrypted successfully! The file path is: {decryptedFilePath}");
+                        IOManager.WriteLine($"Decrypted successfully! The file path is: {decryptedFilePath}");
                     }
                     else
                     {
-                        ioManager.WriteLine("Couldn't find files");
+                        IOManager.WriteLine(isEncryptedFileExist ? "The key file was not found" : "The file to decrypt was not found");
                     }
                     break;
+                case UserOptions.Exit:
+                    IOManager.WriteLine("bye bye");
+                    Environment.Exit(0);
+                    break;
                 default:
+                    IOManager.WriteLine("How did you even get here????");
                     break;
             }
 
-            ioManager.WriteLine("Press key to exit...");
-            ioManager.ReadLine();
+            IOManager.WriteLine("Press key to exit...");
+            IOManager.ReadLine();
         }
     }
 }
