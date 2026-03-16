@@ -2,11 +2,8 @@ namespace Encryptor
 {
   public class Decryptor
   {
-    public Decryptor() { }
-
     public string Decrypt(string filepath, string keypath)
     {
-
       var encryptedData = IOManager.ReadFile(filepath);
 
       try

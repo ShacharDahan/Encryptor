@@ -4,8 +4,6 @@ namespace Encryptor
   {
     private const int Maxkey = 65409;
 
-    public Encryptor() { }
-
     public string[] Encrypt(string filepath)
     {
       var key = new Random().Next(1, Maxkey);
