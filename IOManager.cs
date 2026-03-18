@@ -16,6 +16,19 @@ namespace Encryptor
       }
     }
 
+    public static void Write(string output)
+    {
+      try
+      {
+        Console.Write(output);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine("If it didn't work once i guess we'll try again?");
+        Environment.Exit(1);
+      }
+    }
+
     public static UserOptions GetUserSelection()
     {
       WriteLine("Enter desired action:");

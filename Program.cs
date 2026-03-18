@@ -9,20 +9,22 @@
             switch (userChoice)
             {
                 case UserOptions.Encrypt:
-                    Console.Write("Enter file to encrypt path: ");
+                    IOManager.Write("Enter file to encrypt path: ");
                     var filePath = Console.ReadLine();
 
                     var isFileExist = File.Exists(filePath);
 
                     if (isFileExist)
                     {
-                        Encryptor encryptor = new();
+                        var (newFilePath, keyPath) = PathManager.GetEncryptionPaths(filePath);
 
-                        var paths = encryptor.Encrypt(filePath);
+                        FileEncryptor encryptor = new(new ShiftMultiplyAlgorithm());
+
+                        encryptor.EncryptFile(filePath, newFilePath, keyPath);
 
                         IOManager.WriteLine($"Encrypted file!");
-                        IOManager.WriteLine($"path for the new file is: {paths[0]}");
-                        IOManager.WriteLine($"path for the key file is: {paths[1]}");
+                        IOManager.WriteLine($"path for the new file is: {newFilePath}");
+                        IOManager.WriteLine($"path for the key file is: {keyPath}");
                     }
                     else
                     {
@@ -30,18 +32,21 @@
                     }
                     break;
                 case UserOptions.Decrypt:
-                    Console.Write("Enter file to decrypt path: ");
-                    var encryptedFilePath = Console.ReadLine();
-                    Console.Write("Enter file of encryption key path: ");
-                    var keyFilePath = Console.ReadLine();
+                    IOManager.Write("Enter file to decrypt path: ");
+                    var encryptedFilePath = IOManager.ReadLine();
+                    IOManager.Write("Enter file of encryption key path: ");
+                    var keyFilePath = IOManager.ReadLine();
 
                     var isEncryptedFileExist = File.Exists(encryptedFilePath);
                     var isKeyExist = File.Exists(keyFilePath);
 
                     if (isEncryptedFileExist && isKeyExist)
                     {
-                        Decryptor decryptor = new();
-                        var decryptedFilePath = decryptor.Decrypt(encryptedFilePath, keyFilePath);
+                        var decryptedFilePath = PathManager.GetDecryptionPath(encryptedFilePath);
+
+                        FileEncryptor decryptor = new(new ShiftMultiplyAlgorithm());
+
+                        decryptor.DecryptFile(encryptedFilePath, decryptedFilePath, keyFilePath);
 
                         IOManager.WriteLine($"Decrypted successfully! The file path is: {decryptedFilePath}");
                     }
