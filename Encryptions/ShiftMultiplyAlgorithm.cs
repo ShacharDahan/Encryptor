@@ -1,4 +1,4 @@
-namespace Encryptor
+namespace Encryptor.Encryptions
 {
   public class ShiftMultiplyAlgorithm : CharManipulationAlgorithm
   {

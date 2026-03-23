@@ -1,3 +1,5 @@
+using Encryptor.Interfaces;
+
 namespace Encryptor
 {
   public abstract class CharManipulationAlgorithm : IEncryptionAlgorithm

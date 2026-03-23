@@ -1,4 +1,6 @@
-﻿namespace Encryptor
+﻿using Encryptor.Encryptions;
+
+namespace Encryptor
 {
     class Program
     {

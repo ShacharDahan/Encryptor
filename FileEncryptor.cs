@@ -1,3 +1,5 @@
+using Encryptor.Interfaces;
+
 namespace Encryptor
 {
   public class FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm)
