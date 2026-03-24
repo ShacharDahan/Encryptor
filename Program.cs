@@ -4,9 +4,18 @@ namespace Encryptor
 {
     class Program
     {
+        static MultipleEncryption GetUserEncryptor()
+        {
+            var encryptionType = UserInput.GetEncryptionType();
+
+            var repeatCount = UserInput.GetRepeatCount();
+
+            return EncryptorFactory.Create(repeatCount, encryptionType);
+        }
+
         static void Main(string[] args)
         {
-            var userChoice = IOManager.GetUserSelection();
+            var userChoice = UserInput.GetUserSelection();
 
             switch (userChoice)
             {
@@ -20,9 +29,9 @@ namespace Encryptor
                     {
                         var (newFilePath, keyPath) = PathManager.GetEncryptionPaths(filePath);
 
-                        FileEncryptor encryptor = new(new ShiftMultiplyEncryption());
+                        FileEncryptor fileEncryptor = new(GetUserEncryptor());
 
-                        encryptor.EncryptFile(filePath, newFilePath, keyPath);
+                        fileEncryptor.EncryptFile(filePath, newFilePath, keyPath);
 
                         IOManager.WriteLine($"Encrypted file!");
                         IOManager.WriteLine($"path for the new file is: {newFilePath}");
@@ -46,7 +55,7 @@ namespace Encryptor
                     {
                         var decryptedFilePath = PathManager.GetDecryptionPath(encryptedFilePath);
 
-                        FileEncryptor decryptor = new(new ShiftMultiplyEncryption());
+                        FileEncryptor decryptor = new(GetUserEncryptor());
 
                         decryptor.DecryptFile(encryptedFilePath, decryptedFilePath, keyFilePath);
 

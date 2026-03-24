@@ -8,10 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="Encryptor.cs" />
     <Content Include="Program.cs" />
     <Content Include="IOManager.cs" />
     <Content Include="Program.constats.cs" />
-    <Content Include="Decryptor.cs" />
   </ItemGroup>
 </Project>
