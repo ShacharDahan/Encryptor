@@ -4,7 +4,7 @@ namespace Encryptor.Interfaces
   
   public interface IMultipleEncryptionAlgorithm
   {
-    public EncryptionResult Encrypt(string data);
+    public MultipleEncryptionResult Encrypt(string data);
     public string Decrypt(string data, int[] keys);
   }
 }

@@ -1,10 +1,23 @@
+using Encryptor.Encryptions;
 using Encryptor.Interfaces;
 
 namespace Encryptor
 {
-  public class FileEncryptor(IEncryptionAlgorithm encryptionAlgorithm)
+  public class FileEncryptor(MultipleEncryption multipleEncryption)
   {
-    private readonly IEncryptionAlgorithm _encryptionAlgorithm = encryptionAlgorithm;
+    private readonly IMultipleEncryptionAlgorithm _multipleEncryption = multipleEncryption;
+
+    private string GetKeyString(int[] keys)
+    {
+      var key = $"{keys[0]}";
+      
+      for (int i = 1; i < keys.Length; i++)
+      {
+        key += $" {keys[0]}";
+      }
+
+      return key;
+    }
 
     public void EncryptFile(string originalFilePath, string outputFilePath, string keyPath)
     {

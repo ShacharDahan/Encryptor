@@ -1,6 +1,6 @@
 namespace Encryptor.Encryptions
 {
-  public class ShiftMultiplyAlgorithm : CharManipulationAlgorithm
+  public class ShiftMultiplyEncryption : CharManipulationAlgorithm
   {
     protected override int Maxkey => char.MaxValue / EncryptorConstants.AsciiMaxValue;
 

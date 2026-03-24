@@ -20,7 +20,7 @@ namespace Encryptor
                     {
                         var (newFilePath, keyPath) = PathManager.GetEncryptionPaths(filePath);
 
-                        FileEncryptor encryptor = new(new ShiftMultiplyAlgorithm());
+                        FileEncryptor encryptor = new(new ShiftMultiplyEncryption());
 
                         encryptor.EncryptFile(filePath, newFilePath, keyPath);
 
@@ -46,7 +46,7 @@ namespace Encryptor
                     {
                         var decryptedFilePath = PathManager.GetDecryptionPath(encryptedFilePath);
 
-                        FileEncryptor decryptor = new(new ShiftMultiplyAlgorithm());
+                        FileEncryptor decryptor = new(new ShiftMultiplyEncryption());
 
                         decryptor.DecryptFile(encryptedFilePath, decryptedFilePath, keyFilePath);
 

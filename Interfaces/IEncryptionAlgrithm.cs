@@ -5,6 +5,6 @@ namespace Encryptor.Interfaces
   public interface IEncryptionAlgorithm
   {
     public EncryptionResult Encrypt(string data);
-    public string Decrypt(string data, int keys);
+    public string Decrypt(string data, int key);
   }
 }
