@@ -3,26 +3,26 @@ using Encryptor.Interfaces;
 
 namespace Encryptor.Encryptions
 {
-    public record MultipleEncryptionResult(string Data, int[] Keys);
-
-    public class MultipleEncryption(IEncryptionAlgorithm encryptionAlgorithm, int numberOfTimesToEncrypt)
+    public class MultipleEncryption(IEncryptionAlgorithm encryptionAlgorithm, int numberOfTimesToEncrypt) : IEncryptionAlgorithm
     {
         private readonly IEncryptionAlgorithm _encryptionAlgorithm = encryptionAlgorithm;
         private readonly int _numberOfTimesToEncrypt = numberOfTimesToEncrypt;
 
-        public MultipleEncryptionResult Encrypt(string data)
+        public EncryptionResult Encrypt(string data)
         {
             var encryptedData = data;
             int[] keys = new int[_numberOfTimesToEncrypt];
+            int[] tempKeysArr;
 
             for (int i = 0; i < _numberOfTimesToEncrypt; i++)
             {
-                (encryptedData, keys[i]) = _encryptionAlgorithm.Encrypt(encryptedData);
+                (encryptedData, tempKeysArr) = _encryptionAlgorithm.Encrypt(encryptedData);
+                keys[i] = tempKeysArr[0];
             }
 
             Console.WriteLine($"keys: {string.Join(", ", keys)}");
 
-            return new MultipleEncryptionResult(encryptedData, keys);
+            return new EncryptionResult(encryptedData, keys);
         }
 
         public string Decrypt(string encryptedData, int[] keys)
@@ -31,14 +31,10 @@ namespace Encryptor.Encryptions
 
             for (int i = _numberOfTimesToEncrypt; i > 0; i--)
             {
-                decryptedData = _encryptionAlgorithm.Decrypt(decryptedData, keys[i - 1]);
+                decryptedData = _encryptionAlgorithm.Decrypt(decryptedData, [keys[i - 1]]);
             }
 
             return decryptedData;
         }
     }
-
-    public class SingleEncryption(IEncryptionAlgorithm encryptionAlgorithm) : MultipleEncryption(encryptionAlgorithm, 1) { }
-
-    public class DoubleEncryption(IEncryptionAlgorithm encryptionAlgorithm) : MultipleEncryption(encryptionAlgorithm, 2) { }
 }

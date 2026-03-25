@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Encryptor.Interfaces;
+using Encryptor.Managers;
 
 namespace Encryptor.Encryptions
 {
@@ -10,30 +11,20 @@ namespace Encryptor.Encryptions
         protected abstract char EncryptAction(char c, int key);
         protected abstract char DecryptAction(char c, int key);
 
-        private int GenerateKey(int maxValueInFile)
-        {
-            var maxKey = ComputeMaxKeyForSource(maxValueInFile);
-
-            var upperBound = Math.Max(2, maxKey);
-            var key = new Random().Next(1, upperBound);
-
-            return key;
-        }
-
         public EncryptionResult Encrypt(string data)
         {
             var sourceMax = data.Max(c => (int)c);
 
-            var key = GenerateKey(sourceMax);
+            var key = KeyManager.GenerateKey(sourceMax);
 
             var encryptedData = new string([.. data.Select(c => EncryptAction(c, key))]);
 
-            return new EncryptionResult(encryptedData, key);
+            return new EncryptionResult(encryptedData, [key]);
         }
 
-        public string Decrypt(string encryptedData, int key)
+        public string Decrypt(string encryptedData, int[] keys)
         {
-            var decryptedData = new string([.. encryptedData.Select(c => DecryptAction(c, key))]);
+            var decryptedData = new string([.. encryptedData.Select(c => DecryptAction(c, keys[0]))]);
 
             return decryptedData;
         }

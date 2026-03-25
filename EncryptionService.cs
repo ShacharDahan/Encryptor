@@ -1,11 +1,12 @@
 using Encryptor.Encryptions;
+using Encryptor.Interfaces;
 using Encryptor.Managers;
 
 namespace Encryptor
 {
     public class EncryptionService
     {
-        private MultipleEncryption GetUserEncryptor()
+        private IEncryptionAlgorithm GetUserEncryptor()
         {
             var encryptionType = UserInputManager.GetEncryptionType();
             var repeatCount = UserInputManager.GetRepeatCount();

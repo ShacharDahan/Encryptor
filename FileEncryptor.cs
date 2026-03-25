@@ -3,9 +3,9 @@ using Encryptor.Interfaces;
 
 namespace Encryptor
 {
-    public class FileEncryptor(MultipleEncryption multipleEncryption)
+    public class FileEncryptor(IEncryptionAlgorithm encryption)
     {
-        private readonly MultipleEncryption _multipleEncryption = multipleEncryption;
+        private readonly IEncryptionAlgorithm _encryption = encryption;
 
         private static string GetKeyString(int[] keys)
         {
@@ -23,7 +23,7 @@ namespace Encryptor
         {
             var fileContent = IOManager.ReadFile(originalFilePath);
 
-            var (data, keys) = _multipleEncryption.Encrypt(fileContent);
+            var (data, keys) = _encryption.Encrypt(fileContent);
 
             IOManager.WriteFile(outputFilePath, data);
             IOManager.WriteFile(keyPath, GetKeyString(keys));
@@ -42,7 +42,7 @@ namespace Encryptor
               : throw new FormatException("One or more of the keys are invalid!"))
           .ToArray();
 
-            var decryptedData = _multipleEncryption.Decrypt(encryptedData, keys);
+            var decryptedData = _encryption.Decrypt(encryptedData, keys);
 
             IOManager.WriteFile(outputFilePath, decryptedData);
         }
