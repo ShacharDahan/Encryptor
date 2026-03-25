@@ -13,6 +13,13 @@ namespace Encryptor
         ShiftMultiply,
     }
 
+    public enum NumberOfTimesToEncrypt
+    {
+        NoEncryption = 0,
+        SingleEncryption = 1,
+        DoubleEncryption = 2,
+    }
+
     public static class EncryptorConstants
     {
         public const int AsciiMaxValue = 127;

@@ -1,6 +1,6 @@
 namespace Encryptor.Encryptions
 {
-  public class ShiftUpEncryption : CharManipulationAlgorithm
+  public class ShiftUpEncryption : CharManipulationEncryption
   {
     protected override int ComputeMaxKeyForSource(int sourceMax) => char.MaxValue - sourceMax;
 

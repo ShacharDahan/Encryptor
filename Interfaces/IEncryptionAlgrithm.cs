@@ -1,6 +1,6 @@
 namespace Encryptor.Interfaces
 {
-  public record EncryptionResult(string Data, int Keys);
+  public record EncryptionResult(string Data, int Key);
   
   public interface IEncryptionAlgorithm
   {

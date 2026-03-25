@@ -1,6 +1,6 @@
-﻿namespace Encryptor
+﻿namespace Encryptor.Managers
 {
-    public static class UserInput
+    public static class UserInputManager
     {
         private static T GetEnumSelection<T>(string prompt) where T : struct, Enum // This is AI, Basically what I did before but with a generic method to reduce code duplication.
         {

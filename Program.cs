@@ -1,70 +1,20 @@
-﻿using Encryptor.Encryptions;
+﻿using Encryptor.Managers;
 
 namespace Encryptor
 {
     class Program
     {
-        static MultipleEncryption GetUserEncryptor()
-        {
-            var encryptionType = UserInput.GetEncryptionType();
-
-            var repeatCount = UserInput.GetRepeatCount();
-
-            return EncryptorFactory.Create(repeatCount, encryptionType);
-        }
-
         static void Main(string[] args)
         {
-            var userChoice = UserInput.GetUserSelection();
+            var encryptionService = new EncryptionService();
 
-            switch (userChoice)
+            switch (UserInputManager.GetUserSelection())
             {
                 case UserOptions.Encrypt:
-                    IOManager.Write("Enter file to encrypt path: ");
-                    var filePath = Console.ReadLine();
-
-                    var isFileExist = File.Exists(filePath);
-
-                    if (isFileExist)
-                    {
-                        var (newFilePath, keyPath) = PathManager.GetEncryptionPaths(filePath);
-
-                        FileEncryptor fileEncryptor = new(GetUserEncryptor());
-
-                        fileEncryptor.EncryptFile(filePath, newFilePath, keyPath);
-
-                        IOManager.WriteLine($"Encrypted file!");
-                        IOManager.WriteLine($"path for the new file is: {newFilePath}");
-                        IOManager.WriteLine($"path for the key file is: {keyPath}");
-                    }
-                    else
-                    {
-                        IOManager.WriteLine("Can't find file");
-                    }
+                    encryptionService.Encrypt();
                     break;
                 case UserOptions.Decrypt:
-                    IOManager.Write("Enter file to decrypt path: ");
-                    var encryptedFilePath = IOManager.ReadLine();
-                    IOManager.Write("Enter file of encryption key path: ");
-                    var keyFilePath = IOManager.ReadLine();
-
-                    var isEncryptedFileExist = File.Exists(encryptedFilePath);
-                    var isKeyExist = File.Exists(keyFilePath);
-
-                    if (isEncryptedFileExist && isKeyExist)
-                    {
-                        var decryptedFilePath = PathManager.GetDecryptionPath(encryptedFilePath);
-
-                        FileEncryptor decryptor = new(GetUserEncryptor());
-
-                        decryptor.DecryptFile(encryptedFilePath, decryptedFilePath, keyFilePath);
-
-                        IOManager.WriteLine($"Decrypted successfully! The file path is: {decryptedFilePath}");
-                    }
-                    else
-                    {
-                        IOManager.WriteLine(isEncryptedFileExist ? "The key file was not found" : "The file to decrypt was not found");
-                    }
+                    encryptionService.Decrypt();
                     break;
                 case UserOptions.Exit:
                     IOManager.WriteLine("bye bye");
@@ -80,4 +30,3 @@ namespace Encryptor
         }
     }
 }
-

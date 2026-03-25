@@ -14,9 +14,12 @@ public static class EncryptorFactory
     {
         IEncryptionAlgorithm encryptionAlgorithm = encryptionAlgorithmType == EncryptionType.ShiftUp ? new ShiftUpEncryption() : new ShiftMultiplyEncryption();
 
-        if (repeatCount >= 3)
-            return new MultipleEncryption(encryptionAlgorithm, repeatCount);
-
-        return _encryptors[repeatCount](encryptionAlgorithm);
+        return repeatCount switch
+        {
+            (int)NumberOfTimesToEncrypt.NoEncryption => throw new Exception("Amount of encryptions cannot be 0!"),
+            (int)NumberOfTimesToEncrypt.SingleEncryption => new SingleEncryption(encryptionAlgorithm),
+            (int)NumberOfTimesToEncrypt.DoubleEncryption => new DoubleEncryption(encryptionAlgorithm),
+            _ => new MultipleEncryption(encryptionAlgorithm, repeatCount),
+        };
     }
 }

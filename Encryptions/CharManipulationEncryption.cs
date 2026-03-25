@@ -2,20 +2,29 @@ using System;
 using System.Linq;
 using Encryptor.Interfaces;
 
-namespace Encryptor
+namespace Encryptor.Encryptions
 {
-    public abstract class CharManipulationAlgorithm : IEncryptionAlgorithm
+    public abstract class CharManipulationEncryption : IEncryptionAlgorithm
     {
         protected abstract int ComputeMaxKeyForSource(int sourceMax);
         protected abstract char EncryptAction(char c, int key);
         protected abstract char DecryptAction(char c, int key);
-        public EncryptionResult Encrypt(string data)
+
+        private int GenerateKey(int maxValueInFile)
         {
-            var sourceMax = data.Max(c => (int)c);
-            var maxKey = ComputeMaxKeyForSource(sourceMax);
+            var maxKey = ComputeMaxKeyForSource(maxValueInFile);
 
             var upperBound = Math.Max(2, maxKey);
             var key = new Random().Next(1, upperBound);
+
+            return key;
+        }
+
+        public EncryptionResult Encrypt(string data)
+        {
+            var sourceMax = data.Max(c => (int)c);
+
+            var key = GenerateKey(sourceMax);
 
             var encryptedData = new string([.. data.Select(c => EncryptAction(c, key))]);
 
