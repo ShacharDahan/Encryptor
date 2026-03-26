@@ -1,5 +1,6 @@
 using Encryptor.Encryptions;
 using Encryptor.Interfaces;
+using Encryptor.Managers;
 
 namespace Encryptor
 {
@@ -7,17 +8,7 @@ namespace Encryptor
     {
         private readonly IEncryptionAlgorithm _encryption = encryption;
 
-        private static string GetKeyString(int[] keys)
-        {
-            var key = $"{keys[0]}";
 
-            for (int i = 1; i < keys.Length; i++)
-            {
-                key += $" {keys[i]}";
-            }
-
-            return key;
-        }
 
         public void EncryptFile(string originalFilePath, string outputFilePath, string keyPath)
         {
@@ -26,7 +17,7 @@ namespace Encryptor
             var (data, keys) = _encryption.Encrypt(fileContent);
 
             IOManager.WriteFile(outputFilePath, data);
-            IOManager.WriteFile(keyPath, GetKeyString(keys));
+            IOManager.WriteFile(keyPath, KeyManager.GetKeyString(keys));
         }
 
         public void DecryptFile(string encryptedFilePath, string outputFilePath, string keyPath)
