@@ -7,9 +7,16 @@ namespace Encryptor.Encryptions
 {
     public abstract class CharManipulationEncryption : IEncryptionAlgorithm
     {
+        public int KeyStrength { get; }
         protected abstract int ComputeMaxKeyForSource(int sourceMax);
         protected abstract char EncryptAction(char c, int key);
         protected abstract char DecryptAction(char c, int key);
+
+        protected CharManipulationEncryption()
+        {
+            this.KeyStrength = ComputeMaxKeyForSource(EncryptorConstants.AsciiMaxValue).ToString().Length;
+        }
+
 
         public EncryptionResult Encrypt(string data)
         {

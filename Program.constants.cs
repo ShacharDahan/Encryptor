@@ -23,5 +23,6 @@ namespace Encryptor
     public static class EncryptorConstants
     {
         public const int AsciiMaxValue = 127;
+        public const int ObjectsEqual = 0;
     }
 }

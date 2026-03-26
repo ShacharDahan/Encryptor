@@ -35,16 +35,23 @@ namespace Encryptor
 
             var keysRaw = IOManager.ReadFile(keyPath);
 
-            int[] keys = keysRaw
+            try
+            {
+                int[] keys = keysRaw
           .Split(' ')
           .Select(s => int.TryParse(s, out int n)
               ? n
               : throw new FormatException("One or more of the keys are invalid!"))
           .ToArray();
 
-            var decryptedData = _encryption.Decrypt(encryptedData, keys);
+                var decryptedData = _encryption.Decrypt(encryptedData, keys);
 
-            IOManager.WriteFile(outputFilePath, decryptedData);
+                IOManager.WriteFile(outputFilePath, decryptedData);
+            }
+            catch (Exception e)
+            {
+                IOManager.WriteLine(e.Message);
+            }
         }
     }
 }
